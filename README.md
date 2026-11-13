@@ -16,13 +16,14 @@ We agree that Figure 1 was too dense. We have redesigned it around four steps: (
 
 **See revised Figure 1 and Section 2.1.**
 
-### 2. Notation, motivation, and theoretical interpretation
+### 2. Notation, methodological clarity, and interpretation of Theorem 1
 
-Thank you for noting definitions and explanations that were missing or introduced too late. We have clarified the variable metadata (including $\mathrm{type}_j$ and $\mathrm{desc}_j$), the DoE summary, region representation, aggregation, and GP update.
+We respectfully clarify that Theorem 1 already provides a probabilistic characterization of the robustness of our aggregation procedure. The probability bound quantifies the likelihood that the aggregated proposal remains within a specified neighborhood of the target, under the stated assumptions. We believe this provides theoretical support for our aggregation strategy, although we acknowledge that the original manuscript did not sufficiently explain the intuition behind the bound or its practical implications for optimization.
 
-We also distinguish a bound on proposal aggregation from a guarantee on end-to-end BO regret. Our theoretical claims hold only under their stated assumptions; a distance guarantee implies an objective-value guarantee only with additional regularity conditions.
+We also agree that the methodological presentation can be simplified. In the revised manuscript, we have clarified the notation, added an intuitive discussion of Theorem 1 and its assumptions, and streamlined the pseudocode to emphasize the main algorithmic steps. Secondary implementation details have been moved to the appendix to make the modeling choices and overall reasoning easier to follow.
 
 **See revised Sections 2–3 and Appendix B.**
+
 
 ### 3. Choice of the DoE fraction $\rho_{\mathrm{DoE}}$
 
