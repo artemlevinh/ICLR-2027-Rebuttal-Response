@@ -27,31 +27,25 @@ We also agree that the methodological presentation can be simplified. In the rev
 
 ### 3. Choice of the DoE fraction $\rho_{\mathrm{DoE}}$
 
-We agree that this choice creates a trade-off: a larger initial design provides richer evidence but leaves fewer evaluations for sequential BO. Our current method uses a predetermined allocation, not an adaptively optimal allocation.
+We agree that $\rho_{\mathrm{DoE}}$ involves a trade-off between gathering sufficient initial evidence and preserving evaluations for sequential BO. Our choice of $\rho_{\mathrm{DoE}}=0.3$ is empirically motivated, based on experimental comparisons across different DoE fractions under the same total evaluation budget. We have added these sensitivity results to justify this choice.
 
-We clarify its selection rule and provide a sensitivity comparison across DoE fractions under the same total evaluation budget.
+**See revised Section 4.5.**
 
-**See revised Section 4.5 [insert tested fractions and findings].**
-
-Adaptive budget allocation remains an interesting extension, but we do not claim to solve it here.
+We also appreciate the suggestion of adaptive budget allocation and consider it a promising direction for future work.
 
 ### 4. Definition of $\mathcal{L}_{j,s}$ and normalization
 
-We apologize for the ambiguity. We now define $\mathcal{L}_{j,s}$ at first use and specify the mapping between original decision-variable values and the representation used for proposal generation and aggregation.
+We thank the reviewer for pointing out this ambiguity. The parameter $L_{i,s}$ represents the scalar trust-region size associated with anchor $x_i$ at iteration $s$, as defined in our appendix. We agree that this definition should also appear in the main text. We have therefore clarified the notation and added an explicit definition of the numerical-coordinate normalization $\phi_j$ used in constructing the trust regions.
 
-We separately define input normalization and normalized regret to avoid conflating them.
+**See revised Section 2.4 and the notation appendix.**
 
-**See revised Section 2.2 and Appendix A [verify definitions against code].**
+### 5. Why does LLM influence decrease over time?
 
-### 5. Why does LLM guidance decay over time?
+We thank the reviewer for this important question. Our design follows the early-LLM/late-GP principle of LLINBO (Chang et al., 2025), already cited in Section 2.4. The motivation is not that LLMs are inherently more reliable initially, but that their guidance can complement GP-based search when observations are limited. Our DoE stage further grounds these recommendations in statistical evidence.
 
-Our intention is not to assume that LLMs are more accurate early in optimization. Rather, early GP guidance is based on relatively few objective observations, so DoE-grounded proposals can provide a complementary source of information.
+To strengthen this justification, we have added a theoretical analysis inspired by LLINBO's regret-bound framework, explicitly accounting for our scheduling assumptions, together with a sensitivity analysis of the decay parameters.
 
-As verified evaluations accumulate, we increasingly favor the observation-driven GP.
-
-We have clarified this rationale and examine sensitivity to the decay schedule.
-
-**See revised Section 2.4 and Section 4.5 [insert results].**
+**See revised Sections 3 and 4.5.**
 
 ### 6. Stronger single LLMs, aggregation, and the distance metric
 
