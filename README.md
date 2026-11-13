@@ -8,7 +8,7 @@
 
 # Response to Reviewer 1
 
-We sincerely thank the reviewer for the careful and detailed assessment. We appreciate the positive comments on the treatment of heterogeneous variables, the connection to related work, and the ablation studies. We agree that the original submission did not explain several methodological choices clearly enough. Our revisions aim to make the motivation, implementation, theoretical scope, and experimental evidence easier to assess. We address each point below.
+We sincerely thank the reviewer for the careful and detailed assessment. We appreciate the positive comments and thoughtful suggestions, which have helped us identify areas for improvement. We acknowledge that several methodological choices were not sufficiently explained in the original submission. In the revised manuscript, we have clarified the motivation, implementation, theoretical scope, and experimental evidence. We address each concern individually below.
 
 ### 1. Figure 1 and the overall workflow
 
