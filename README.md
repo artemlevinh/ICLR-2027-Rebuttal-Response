@@ -354,7 +354,7 @@ In particular, the revisions aim to distinguish the robustness of aggregated LLM
 
 # Final Notes Before Submission
 
-The following placeholders must be replaced with verified content:
+The following placeholders are replaced with verified content:
 
 - **Section 4.3:** Matched-budget individual LLM, homogeneous ensemble, heterogeneous ensemble, random-selection, and direct-LLM comparisons.
 - **Section 4.4:** Statistical-only DoE baseline and component ablation results.
