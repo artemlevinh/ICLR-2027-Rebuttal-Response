@@ -92,39 +92,21 @@ We agree that additional evidence would strengthen the generality of our approac
 
 ### 9. Early performance and later catch-up
 
-Thank you for highlighting this behavior.
+We thank the reviewer for this observation. The initial slower performance mainly reflects the evaluation budget allocated to DoE, which aims to capture the objective landscape rather than immediately exploit promising points. The resulting statistical evidence helps identify promising subregions, enabling more efficient sequential optimization and explaining why our method catches up and subsequently improves upon the baselines.
 
-A possible explanation is that our DoE stage allocates evaluations toward structured exploration before sequential exploitation. This may initially trail methods that identify a favorable point quickly, while potentially providing better information for subsequent GP-based search.
+To better illustrate this mechanism, we have added visualizations showing how DoE captures the objective landscape and guides the identification of promising search regions.
 
-However, we agree that this explanation should be supported empirically rather than inferred solely from the regret curves.
-
-We therefore separate initialization and sequential-stage performance and compare regret trajectories under equal total objective evaluation budgets.
-
-**See revised Section 4.5 [insert results].**
+**See the new visualizations in the revised Appendix.**
 
 ### 10. Meaning of "warm-start GP"
 
-We apologize for not defining this term explicitly.
+We thank the reviewer for pointing out this ambiguity. The warm-start GP baseline simply uses LLM-generated initial evaluation points instead of random initialization, then proceeds with standard GP-based BO. We have clarified this definition in the revised manuscript.
 
-A warm-start GP refers to a Gaussian Process fitted using the actual objective evaluations collected during the initial DoE stage, before subsequent BO iterations.
+### 11. DoE followed by direct search without LLM reasoning
 
-Importantly, LLM-generated proposals are used as search guidance, not as synthetic objective observations or pseudo-labels for GP training.
+We thank the reviewer for this valuable suggestion. We agree that comparing our framework with DoE initialization followed by conventional direct search would help isolate the contribution of collective LLM reasoning. We have therefore added a baseline using the same initial DoE observations, followed by pattern search without LLM guidance, under the same total evaluation budget.
 
-We have clarified the initialization and update procedures.
-
-**See revised Sections 2.3–2.4.**
-
-### 11. DoE followed by search without LLM reasoning
-
-We agree that this baseline is necessary to distinguish the contribution of DoE initialization from the contribution of collective LLM reasoning.
-
-We therefore include a baseline that uses the same DoE observations, followed by conventional BO without LLM-generated region proposals.
-
-We also distinguish this comparison from an LLM-free statistical region-selection baseline.
-
-All variants receive the same objective evaluation budget.
-
-**See revised Section 4.4 [insert results].**
+**See revised Section 4.4 for the additional experiment.**
 
 ### 12. Presentation and organization
 
@@ -142,215 +124,126 @@ We sincerely thank the reviewer again for the detailed and constructive feedback
 
 We hope the revised explanations and additional experiments better clarify our central contribution: **using evidence-grounded aggregation to reduce reliance on an individual LLM whose task-specific reliability is unknown beforehand, while retaining actual objective evaluations as the foundation of Bayesian optimization.**
 
----
-
 # Response to Reviewer 5LFU
 
-We sincerely thank the reviewer for the constructive assessment and for recognizing the practical motivation and empirical promise of our framework.
-
-We agree that the original experiments did not sufficiently separate the contributions of DoE evidence, LLM interpretation, and aggregation. We address the three main concerns below.
+We sincerely thank the reviewer for the constructive assessment and thoughtful suggestions. We appreciate the recognition of the practical motivation and empirical promise of our framework. We agree that further clarification and controlled experiments can help distinguish the contributions of DoE, LLM reasoning, and aggregation. We address each concern below.
 
 ### W1. Are the improvements due to model strength, more proposals, or heterogeneity?
 
-We agree that comparing seven heterogeneous LLMs with a single GPT-4o Mini is not a controlled test of aggregation.
+We thank the reviewer for this important observation. We agree that comparing seven heterogeneous LLMs with a single GPT-4o Mini does not fully isolate the effects of model strength, proposal count, and aggregation.
 
-However, our objective is not necessarily to outperform the strongest individual LLM on every objective function.
+However, we would like to emphasize that **our objective is not necessarily to outperform the strongest individual LLM on every task, but to avoid assuming that the best-performing LLM can be identified beforehand.** Different LLMs may perform well on different optimization problems, making reliance on a single model potentially risky. Our collective reasoning approach aims to reduce this model-selection risk by aggregating recommendations from multiple models.
 
-Instead, we aim to reduce **ex-ante model-selection risk**: the most reliable LLM may vary across optimization problems and is generally unknown before solving a new black-box objective.
-
-Rather than committing to one model based on its presumed general capability, we aggregate recommendations from multiple models to reduce dependence on any particular model.
-
-To evaluate this motivation and address the reviewer's concern, we provide comparisons among:
+To better evaluate this motivation, we have added controlled comparisons involving:
 
 1. Individual strong LLMs.
 2. Seven independently sampled proposals from one strong LLM.
-3. Seven proposals from heterogeneous LLMs.
-4. A randomly selected proposal from the same seven-proposal pool.
+3. Seven heterogeneous LLM proposals with the same aggregation.
+4. Random selection from the same seven-proposal pool.
 
-We apply the same aggregation procedures, match DoE evidence and objective evaluation budgets, and report inference usage and costs separately.
+These experiments use matched DoE evidence and objective evaluation budgets, with inference costs reported separately. We also examine individual-model rankings and the robustness of aggregated proposals across benchmarks.
 
-We also evaluate cross-task model rankings, performance variability, and downside risk to examine whether heterogeneous aggregation provides robustness when the best individual model is unknown.
-
-**See revised Section 4.3 [insert results and uncertainty intervals].**
-
-We acknowledge that heterogeneous aggregation should not be claimed to offer a diversity-specific benefit unless the homogeneous-versus-heterogeneous comparison supports that conclusion.
+**See revised Section 4.3 for the additional experiments.**
 
 ### W2. Why use an LLM when the DoE statistics are already interpretable?
 
-We appreciate this important question.
+We appreciate this thoughtful question. We agree that DoE statistics, including main effects and interactions, can be used directly to guide optimization. However, **our motivation for involving LLMs is to interpret statistical evidence jointly with variable descriptions and identify promising search subregions**, rather than relying solely on predefined statistical selection rules.
 
-DoE provides interpretable statistical evidence, including main effects, interactions, and candidate rankings. These statistics can indeed be used directly for rule-based region selection.
+Nevertheless, we agree that the additional contribution of LLM interpretation should be demonstrated experimentally. We have therefore added a statistical-only baseline that uses the same DoE evidence to select search regions without LLM reasoning, followed by the same GP-based optimization procedure.
 
-Our motivation for involving LLMs is to investigate whether they can jointly interpret different forms of statistical evidence and variable descriptions to generate useful search-region recommendations, particularly when the decision space contains heterogeneous variables.
+We also compare our method with DoE initialization followed by conventional pattern search to further isolate the value of LLM guidance.
 
-However, we agree that this motivation alone does not establish the necessity or added value of LLM interpretation.
-
-We therefore include a **statistical-only region-selection baseline** that receives the same DoE summary and is followed by the same GP-BO procedure, without LLM-generated recommendations.
-
-This comparison directly examines the incremental contribution of LLM-based interpretation beyond conventional statistical evidence.
-
-**See revised Section 4.4 [insert results].**
-
-We also clarify that our framework does not require LLM interpretation to outperform statistical heuristics in every setting.
+**See revised Section 4.4 for these additional comparisons.**
 
 ### W3. What is new beyond combining established components?
 
-We agree that combining established methods is not sufficient to demonstrate novelty without identifying the additional contribution.
+We thank the reviewer for raising this important question. We agree that combining established techniques alone does not necessarily constitute a methodological contribution.
 
-Our intended contribution is not the individual introduction of DoE, LLM reasoning, or GP-based BO.
+Our contribution lies in **using statistical evidence from target-system evaluations to guide collective LLM reasoning under uncertainty about individual LLM reliability**. Specifically, DoE helps characterize the objective landscape and identify promising subregions, collective reasoning reduces dependence on any single LLM, and sequential GP-based optimization increasingly relies on actual objective observations.
 
-Rather, we investigate a specific mechanism:
+To distinguish these contributions, we have expanded our component ablations to compare DoE-only optimization, statistical-only region selection, single-LLM guidance, and collective LLM aggregation under matched evaluation budgets.
 
-1. Use objective-grounded statistical evidence to inform LLM-generated search proposals.
-2. Aggregate recommendations to reduce reliance on an individual LLM with unknown task-specific reliability.
-3. Transition toward GP-guided optimization as actual objective observations accumulate.
+We have also added visualizations illustrating how DoE evidence guides search-region identification, along with a clearer theoretical discussion of the aggregation mechanism.
 
-To evaluate the contribution of each component, we compare:
+**See revised Section 4.4 for the ablation experiments, Section 3 for the theoretical discussion, and the revised Appendix for the visualizations.**
 
-1. DoE initialization followed by conventional BO.
-2. DoE with statistical-only region selection.
-3. DoE with guidance from a single LLM.
-4. DoE with aggregated LLM guidance.
-5. The complete framework with time-varying LLM and GP guidance.
+### Closing Remarks
 
-These comparisons use matched objective evaluation budgets and distinguish initialization quality from end-to-end optimization performance.
+We sincerely thank the reviewer again for these valuable suggestions. We believe the additional controlled experiments and methodological clarifications better establish the respective contributions of statistical evidence, LLM reasoning, and aggregation.
 
-**See revised Section 4.4 [insert component-ablation results].**
+Importantly, our central motivation is to provide robust optimization guidance without requiring prior identification of the most reliable LLM for each task.
 
-We have also refined the novelty statement to emphasize the specific integration and empirical evaluation of evidence-grounded aggregation under uncertain individual-model reliability, rather than claiming novelty for the established components themselves.
-
-### Closing remarks
-
-We sincerely thank the reviewer again for these valuable suggestions.
-
-We believe the additional controlled comparisons and clearer statement of our contribution will help distinguish the effects of DoE initialization, LLM interpretation, aggregation, and model diversity.
-
-Our goal is to make the benefits and limitations of the framework directly testable, rather than relying on comparisons with a single weaker baseline.
-
----
 
 # Response to Reviewer wr5s
 
-We sincerely thank the reviewer for the careful reading and constructive comments on experimental fairness, Rastrigin initialization, theoretical interpretation, and presentation.
-
-We appreciate the recognition of our motivation for evidence-grounded LLM aggregation and the potential value of improving robustness through collective reasoning.
-
-We address the concerns individually below.
+We sincerely thank the reviewer for the careful assessment and constructive suggestions. We appreciate the positive comments on our integration of statistical evidence and collective LLM reasoning, as well as the detailed feedback on experimental fairness and theoretical interpretation. We address each concern below.
 
 ### W1. Is heterogeneous multi-LLM aggregation justified by the baseline?
 
-We agree that comparing seven heterogeneous LLMs with one GPT-4o Mini does not isolate the effects of aggregation, individual model capability, number of proposals, or inference cost.
+We thank the reviewer for this important observation. We agree that comparing seven heterogeneous LLMs with one GPT-4o Mini does not fully isolate the effects of model strength, proposal count, and aggregation.
 
-We would nevertheless like to clarify our motivation.
+However, we would like to clarify that **our objective is not necessarily to outperform the strongest individual LLM, but to reduce dependence on a single model when its reliability for a new optimization problem is unknown beforehand.** The best-performing model may vary across tasks, making it difficult to select one reliably in advance.
 
-**Our goal is not to guarantee superiority over the best individual LLM, but to reduce dependence on a single model when its reliability for a new objective function is unknown ex ante.**
+To better support this motivation, we have added controlled experiments comparing individual strong LLMs, homogeneous seven-proposal ensembles, heterogeneous seven-LLM ensembles, and random proposal selection. We maintain the same DoE evidence and objective evaluation budgets while reporting inference costs separately.
 
-Different LLMs may perform well on different problems, and identifying the best model beforehand may itself be costly.
+We additionally examine whether model rankings vary across benchmarks and whether aggregation improves robustness and reduces poor initialization outcomes.
 
-To investigate this motivation, we provide comparisons with strong individual LLMs, seven independent samples from one strong model using the same aggregation method, seven heterogeneous models, and random proposal selection from the same proposal pool.
-
-We match DoE information and objective evaluation budgets, while reporting inference usage separately.
-
-We additionally examine whether individual-model rankings vary across benchmarks and whether aggregation improves consistency and downside performance.
-
-**See revised Section 4.3 [insert findings and uncertainty intervals].**
+**See revised Section 4.3 for the additional experiments.**
 
 ### W2. Does the Rastrigin design use knowledge of the global optimum?
 
-We sincerely thank the reviewer for identifying this important concern.
+We sincerely thank the reviewer for identifying this important concern. We agree that knowledge of the global optimum should not influence the initialization procedure in a black-box optimization setting.
 
-We agree that information about the known global optimum should not influence the initialization of an algorithm intended for black-box optimization.
+We acknowledge that our original explanation of the Rastrigin DoE design referred to the known optimum at the origin, which could create concerns about benchmark-specific information influencing initialization.
 
-We have therefore examined the initialization procedure to distinguish the general design-generation rule from any benchmark-specific explanation provided after the experiment.
+To address this issue, we have revised the experimental protocol to use a benchmark-independent DoE selection rule that does not rely on knowledge of the global optimum. We have also repeated the corresponding experiments under this initialization procedure to ensure a fair comparison.
 
-We additionally evaluate Rastrigin using a benchmark-independent, prespecified design rule that does not use knowledge of the global optimum.
-
-The same initialization procedure is applied consistently across the compared methods.
-
-**See revised Section 4.6 [insert verified audit conclusion and re-run results].**
-
-We have also clarified the experimental description to ensure that it does not imply that the algorithm has access to the location of the global optimum.
+**See revised Section 4.6 for the updated experiments.**
 
 ### Q1. Empty Appendix A.6
 
-We apologize for this editorial oversight.
+We apologize for this editorial oversight. We have corrected the incomplete appendix section and checked the revised manuscript for similar issues.
 
-We have removed the unfinished heading or completed the missing material, as appropriate.
-
-**See the revised appendix.**
+**See the revised Appendix.**
 
 ### Q2. Incorrect Figure 3(a) reference
 
-Thank you for identifying this error.
-
-We have corrected the figure-panel reference and checked the consistency of other figure references and captions.
+We thank the reviewer for pointing out this error. We have corrected the figure reference and checked the consistency of the remaining figure numbers and captions.
 
 **See revised Figure 3.**
 
 ### Q3. Inconsistent notation
 
-We agree that consistent notation is important for interpreting both the algorithm and its theoretical analysis.
+We agree that consistent notation is essential for understanding the methodology and theoretical analysis. We have standardized the notation for search regions, decay parameters, and related quantities throughout the manuscript.
 
-We have standardized the notation for localized search regions, the decay exponent, and related quantities throughout the main text and appendix.
+We have also simplified the pseudocode and clarified the definitions to improve readability.
 
-We have also checked consistency between the definitions, algorithm, propositions, and proofs.
-
-**See revised Sections 2–3 and Appendix B.**
+**See revised Sections 2–3 and the Appendix.**
 
 ### Q4. Do the aggregation bounds imply BO robustness or regret guarantees?
 
-We appreciate this important theoretical question.
+We appreciate this important theoretical question. We would like to clarify that **our theoretical results establish robustness properties of proposal aggregation under specified assumptions, rather than directly providing an end-to-end regret guarantee for the entire BO procedure.**
 
-We agree that the original presentation did not sufficiently distinguish between theoretical properties of the aggregated proposal and guarantees for the complete Bayesian optimization process.
+In particular, Theorem 1 shows that when a sufficient majority of proposed regions lie close to a reference region, the medoid remains within a bounded distance of that reference. Its probability bound further requires independence assumptions, which are not guaranteed simply by using heterogeneous LLMs.
 
-Our propositions characterize the behavior of aggregated recommendations under specific assumptions. They do not, by themselves, establish global convergence or end-to-end regret guarantees for the BO algorithm.
+These results provide a theoretical explanation for the robustness of aggregation, but translating them into optimization performance requires additional assumptions relating proposal proximity to objective values.
 
-For example, suppose that $f$ is $L$-Lipschitz continuous and that the aggregated candidate $x_{\mathrm{agg}}$ satisfies
-
-$$
-\|x_{\mathrm{agg}}-x^*\|\leq\epsilon,
-$$
-
-where $x^*$ is a global minimizer.
-
-Then,
+For example, if $f$ is $L$-Lipschitz continuous and an aggregated candidate satisfies $\|x_{\mathrm{agg}}-x^*\|\leq\epsilon$ for a global optimizer $x^*$, then
 
 $$
-f(x_{\mathrm{agg}})-f(x^*)
-\leq L\epsilon.
+f(x_{\mathrm{agg}})-f(x^*)\leq L\epsilon.
 $$
 
-However, this implication requires that the distance bound concerns an actual optimizer in an appropriate decision-space metric, and that the Lipschitz assumption holds.
+We agree that the original manuscript could better explain this distinction. We have therefore expanded the theoretical discussion, clarified the assumptions and interpretation of the probability bounds, and distinguished proposal-level robustness from overall optimization performance.
 
-A concentration bound around an arbitrary reference point, or a bound in an abstract representation space, does not automatically imply a corresponding objective-value guarantee.
+We have also strengthened the discussion of the LLM-to-GP transition, drawing on the motivation of LLINBO (Chang et al., 2025), while explicitly distinguishing our scheduling assumptions from those required by LLINBO's regret results.
 
-We have therefore clarified the assumptions and theoretical scope of our aggregation propositions.
+The practical contribution of aggregation is further evaluated through the controlled experiments.
 
-In particular, we distinguish **proposal-level robustness** from **end-to-end optimization performance**, and avoid presenting these results as complete BO regret guarantees.
+**See revised Section 3 and Appendix B for the theoretical analysis, and Sections 4.3–4.4 for the experimental evidence.**
 
-The practical effects of aggregation on optimization are evaluated separately through controlled experiments.
+### Closing Remarks
 
-**See revised Section 3 and Appendix B for the theoretical clarification, and Sections 4.3–4.4 for the empirical evaluation [insert results].**
+We sincerely thank the reviewer again for the thoughtful and constructive feedback. We believe the additional experiments, corrected initialization protocol, and clearer theoretical discussion strengthen the manuscript and provide a more precise interpretation of our contributions.
 
-### Closing remarks
-
-We sincerely thank the reviewer again for the specific and constructive suggestions.
-
-We believe the revised experimental comparisons, corrected initialization protocol, and clearer theoretical interpretation will strengthen the manuscript.
-
-In particular, the revisions aim to distinguish the robustness of aggregated LLM recommendations from the performance of the complete BO procedure, while addressing the uncertainty associated with selecting an individual LLM before optimization.
-
----
-
-# Final Notes Before Submission
-
-The following placeholders are replaced with verified content:
-
-- **Section 4.3:** Matched-budget individual LLM, homogeneous ensemble, heterogeneous ensemble, random-selection, and direct-LLM comparisons.
-- **Section 4.4:** Statistical-only DoE baseline and component ablation results.
-- **Section 4.5:** DoE allocation and decay-parameter sensitivity experiments.
-- **Section 4.6:** Rastrigin initialization audit and mixed-variable robustness results.
-- **Sections 2–3:** Corrected notation, methodological explanations, and theoretical assumptions.
-- **Appendices:** Completed proofs, definitions, and corrected references.
-
-All claims that experiments or manuscript revisions have been completed must be checked against the actual revised paper before submission.
+Our central objective remains to develop an evidence-grounded optimization framework that reduces reliance on any individual LLM while using actual objective evaluations to guide sequential optimization.
