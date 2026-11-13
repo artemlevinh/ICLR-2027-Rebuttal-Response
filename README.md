@@ -1,7 +1,6 @@
 # ICLR-2027-Rebuttal-Response
 
 
-# ICLR 2027 Author Rebuttal
 **Paper: Evidence-Grounded Bayesian Optimization with Collective LLM Reasoning**
 
 ---
