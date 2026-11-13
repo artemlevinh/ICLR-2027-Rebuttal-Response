@@ -53,7 +53,7 @@ We agree that our original seven-model comparison with one GPT-4o Mini agent can
 
 However, we would like to clarify our central motivation.
 
-**Our objective is not necessarily to outperform the strongest individual LLM on every task, but to avoid assuming that the best-performing LLM is known ex ante.**
+**Our objective is not necessarily to outperform the strongest individual LLM on every task, but to avoid assuming that the best-performing LLM is known beforehand.**
 
 In black-box optimization, different LLMs may perform well on different objective functions, and identifying the most reliable model in advance may itself require costly evaluations. Our framework therefore aims to reduce dependence on any particular LLM through evidence-grounded aggregation.
 
@@ -68,37 +68,27 @@ We keep prompts, DoE evidence, random seeds, and objective evaluation budgets al
 
 We also examine whether individual-model rankings vary across benchmarks and whether aggregation reduces variability and downside risk.
 
-**See revised Section 4.3 [insert numerical results].**
+**See revised Section 4.3.**
 
 Regarding the evaluation metrics, we distinguish distance to the nearest global optimizer, initialization regret, and end-to-end normalized simple regret. These metrics capture different aspects of initialization quality and optimization performance.
 
 **See revised Section 4.1 for the metric definitions.**
 
-### 7. A strong LLM as the direct sequential optimizer
+### 7. Comparison with a strong LLM as a direct optimizer
 
-We agree that this is an important alternative to region-level guidance.
+We thank the reviewer for this valuable suggestion. We would like to emphasize that a central motivation of our framework is that the strongest LLM for a given optimization problem cannot be identified beforehand, and its reliability may vary across tasks. Rather than relying on a single model, our approach aggregates multiple LLM recommendations to reduce model-selection risk.
 
-Our framework differs from direct LLM optimization by using structured DoE evidence, aggregating region proposals, and relying on actual objective evaluations to update the GP.
+Nevertheless, we agree that directly using a strong LLM for sequential optimization is an important baseline. We have therefore added an experiment comparing direct strong-LLM optimization with our framework under the same objective evaluation budget.
 
-Nevertheless, these methodological differences alone do not establish superior performance.
-
-We therefore include a baseline in which a strong LLM observes the same available objective history and directly proposes subsequent evaluation points without our collective aggregation stage.
-
-The objective evaluation budget is matched, and inference cost is reported separately.
-
-**See revised Section 4.3 [insert result].**
+**See revised Section 4.3.**
 
 ### 8. Evaluation on heterogeneous decision variables
 
-We agree that continuous synthetic benchmarks alone cannot establish effectiveness across general mixed-variable domains.
+We would like to respectfully clarify that our experiments are not limited to continuous domains. The FCNet Naval hyperparameter optimization experiment (Section 3) involves nine hyperparameters, including categorical, integer-valued, and numerical variables. Our x264 software configuration experiment (Section 4) further evaluates optimization over a constrained discrete search space.
 
-These benchmarks allow controlled assessment of optimization performance, but they do not fully represent practical problems involving categorical, integer, and continuous variables.
+We agree that additional evidence would strengthen the generality of our approach. We have therefore added another benchmark involving heterogeneous decision variables to further evaluate its performance and robustness.
 
-We now clarify the scope of the synthetic experiments and include **[insert verified mixed-variable benchmark and results, if completed]**.
-
-**See revised Section 4.6.**
-
-We have also narrowed the claims where necessary to avoid generalizing beyond the evaluated settings.
+**See revised Section 4.6 for the additional benchmark and results.**
 
 ### 9. Early performance and later catch-up
 
