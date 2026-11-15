@@ -76,8 +76,7 @@ We sincerely thank the reviewer for the careful reading and thoughtful comments 
 
 **W2.** We thank the reviewer for identifying this issue. We agree that a black-box optimizer should not use knowledge of the global minimizer when choosing its initial design. The original explanation of Rastrigin's design referred to the optimum at the origin and was therefore inappropriate as a justification for initialization. We have adopted a benchmark-independent design rule and repeated the Rastrigin comparison under that rule, without using optimum information to select the DoE points. **See revised Section 4.6.**
 
-**Q1.** We apologize for the incomplete Appendix A.6. We have corrected the section and checked the revised appendix for similar omissions.
-
+**Q1.** We apologize for the confusion. Appendix A.6 was actually included in the original submission, but a LaTeX formatting issue caused the section heading and corresponding figure to appear in different locations, giving the impression that the section was empty. We have corrected the formatting and verified the placement of the section and figures in the revised appendix.
 **Q2.** Thank you for catching the incorrect Figure 3(a) reference. We have corrected the panel attribution and checked the other figure labels and captions. **See revised Figure 3.**
 
 **Q3.** We agree that inconsistent notation makes the method harder to follow. We have standardized the notation for the local search domain and decay exponent throughout the main text, algorithms, and appendix, and have simplified the corresponding pseudocode. **See revised Sections 2–3 and Appendix B.**
