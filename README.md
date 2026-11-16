@@ -64,7 +64,13 @@ We additionally compare aggregation with random selection from the same seven-pr
 
 **See revised Section 4.3.**
 
-**W2.** We agree that DoE statistics such as estimated effects, interactions, and ranked candidates can themselves guide region selection. Our reason for using LLMs is to combine these measured patterns with factor descriptions and feasibility constraints when recommending promising subregions; this does not imply that an LLM is always necessary. To assess its incremental contribution, we compare an LLM-free statistical region-selection rule with LLM-guided selection using the same DoE observations and downstream GP-BO procedure. We also examine DoE-only and LLM-only variants as part of the component study. **See revised Section 4.4.**
+**W2.** We thank the reviewer for this important question. While DoE provides statistical evidence such as main effects, interactions, and candidate rankings, **translating these findings into promising and feasible search subregions remains a challenging task**. Our key contribution is to enable LLMs to jointly interpret statistical evidence, variable descriptions, and constraints, transforming observed objective behavior into actionable guidance for subsequent BO.
+
+Importantly, our FCNet ablation already provides empirical support for the contribution of LLM guidance. In Figure (b), the full method and the No in-loop LLM variant share identical initial DoE observations, but the full method achieves better optimization performance during subsequent evaluations. This suggests that LLM guidance contributes beyond the initial statistical screening.
+
+We have further expanded this ablation in Figures (c) and (d), including a statistical-only region-selection baseline using the same DoE evidence, to more directly evaluate the additional contribution of LLM-based interpretation.
+
+**See revised Section 3 and Figures (b)–(d).**
 
 **W3.** We thank the reviewer for this important question. While DoE, LLM reasoning, and BO are individually established techniques, **our key contribution lies in their principled integration to enable statistically grounded LLM reasoning for black-box optimization**, rather than simply combining existing methods.
 
