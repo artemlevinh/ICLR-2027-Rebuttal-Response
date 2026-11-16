@@ -58,14 +58,13 @@ We sincerely thank the reviewer for the constructive assessment and for recogniz
 
 **W2.** We agree that DoE statistics such as estimated effects, interactions, and ranked candidates can themselves guide region selection. Our reason for using LLMs is to combine these measured patterns with factor descriptions and feasibility constraints when recommending promising subregions; this does not imply that an LLM is always necessary. To assess its incremental contribution, we compare an LLM-free statistical region-selection rule with LLM-guided selection using the same DoE observations and downstream GP-BO procedure. We also examine DoE-only and LLM-only variants as part of the component study. **See revised Section 4.4.**
 
-**W3.** We thank the reviewer for this important question. We agree that DoE, LLM reasoning, and BO are individually established methods. Our contribution lies in **grounding LLM reasoning in statistical evidence obtained from DoE**, allowing LLMs to identify promising subregions based on observed objective behavior rather than relying primarily on pretrained knowledge, which may be insufficient or biased in practical black-box optimization tasks.
+**W3.** We thank the reviewer for this important question. While DoE, LLM reasoning, and BO are individually established techniques, **our key contribution lies in their principled integration to enable statistically grounded LLM reasoning for black-box optimization**, rather than simply combining existing methods.
 
-Our existing FCNet ablation in Section 3, Figure (b), provides evidence of the contributions of these components. The full method and the No in-loop LLM variant follow identical trajectories during the initial DoE stage, confirming that their early performance comes from the shared experimental design rather than subsequent LLM guidance. After initialization, the full method continues improving and eventually outperforms the No in-loop LLM variant, suggesting that continued LLM-guided search provides additional benefits. Meanwhile, the No DoE/no evidence variant remains competitive, indicating that DoE grounding is beneficial but not uniformly superior at every evaluation budget.
+Unlike conventional LLM-guided optimization, which may rely heavily on pretrained knowledge or general heuristics, our framework allows LLMs to interpret statistical evidence collected directly from the target system through DoE. This enables them to identify promising search subregions based on observed objective behavior. Such grounding is particularly important when pretrained knowledge is incomplete, biased, or poorly aligned with the unknown objective landscape. **Our approach therefore shifts LLMs from primarily knowledge-driven advisors toward evidence-grounded optimization agents**, supporting more informed and adaptive search-space refinement.
 
-We have further expanded the analysis with Figures (c) and (d) to better isolate the contributions of DoE evidence and LLM reasoning.
+To examine the contribution of this mechanism, our FCNet ablation in Section 3, Figure (b), separates the effects of DoE evidence and LLM guidance. We further expand this analysis in Figures (c) and (d), providing additional evidence on the individual and combined contributions of these components.
 
 **See revised Section 3 and Figures (b)–(d).**
-
 ---
 
 # Response to Reviewer wr5s
