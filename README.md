@@ -1,54 +1,34 @@
 # Response to Reviewer 5UqE
 
-We sincerely thank the reviewer for the careful and detailed assessment. We appreciate the positive comments and thoughtful suggestions, which have helped us improve the clarity of the manuscript. We address each concern below.
+We thank the reviewer for the detailed assessment and constructive suggestions. We address each concern below.
 
-**W1.** We agree that Figure 1 contained too many implementation details. We have simplified it to show the main workflow: collect DoE evidence, obtain evidence-grounded LLM proposals, aggregate promising regions, and conduct sequential GP-based optimization. The detailed steps are explained in the text and appendix. **See revised Figure 1 and Section 2.1.**
+**W1.** We have simplified Figure 1 to show DoE evidence, LLM region proposals, aggregation, and sequential BO, separating implementation details from the overview. See Figure 1 and Section 2.1.
 
-**W2.** We thank the reviewer for highlighting the unclear notation and methodological explanations. We have clarified the definitions of factor types, DoE summaries, region representations, and search operations, and simplified the pseudocode.
+**W2.** We have clarified notation and shortened the pseudocode. Theorem 1 states that when a majority of proposals are close to a reference region, their medoid remains within a bounded distance. Independence is required for the probability statement, not the deterministic majority bound. We now explain these assumptions and distinguish proposal robustness from BO regret guarantees. See Sections 2–3 and the theoretical appendix.
 
-We would also like to respectfully clarify that Theorem 1 provides a probability bound showing that **when most LLMs propose regions close to a target region, their aggregated medoid is also likely to remain close to that region**. This supports our motivation for collective reasoning: aggregation can reduce the influence of a minority of unreliable proposals. We agree, however, that the intuition and assumptions behind this result were not sufficiently explained. We have expanded the discussion to clarify how the guarantee depends on the proportion of reliable proposals and the independence assumption, while distinguishing proposal-level robustness from end-to-end BO performance.
+**W3.** We selected $\rho_{\mathrm{DoE}}=0.3$ through experimental comparisons under a fixed total evaluation budget. This balances initial evidence against sequential evaluations. The revised sensitivity analysis explains this choice. Our current allocation is predetermined; adapting it using BO feedback remains a useful extension. See Section 4.5.
 
-**See revised Sections 2–3 and Appendix B.**
+**W4.** $L_{i,s}$ is the scalar trust-region size around anchor $x_i$ at iteration $s$. We have moved its definition from the notation appendix to the corresponding equation and clarified the numerical-coordinate transformation $\phi_j$. See revised Section 2.4 and the notation appendix.
 
-**W3.** We agree that the DoE fraction trades off initial statistical evidence against evaluations available for sequential BO. Our choice of $\rho_{\mathrm{DoE}}=0.3$ is empirically motivated by comparisons of different allocations under a fixed total evaluation budget. We now report the corresponding sensitivity analysis and explain the selection rule. We appreciate the suggestion of adaptive allocation and regard it as a useful extension. **See revised Section 4.5.**
+**W5.** Our early LLM guidance follows measured DoE evidence, not an ungrounded warm start. Aggregation limits reliance on one model; the schedule shifts query selection toward GP search as observations accumulate. LLINBO and AuxBO motivate decay, while our contribution is DoE-grounded collective guidance. The empirical settings $\rho_0=0.10$ and $\lambda_0=0.80$ preserve global exploration and control the initial LLM/GP balance. We use $\gamma=4$ to control transition speed, not as a universal no-harm threshold or an inherited LLINBO guarantee. See Section 2.4 and the Appendix.
 
-**W4.** We apologize for the ambiguity. The quantity $L_{i,s}$ in the trust-region expression denotes the scalar size of the region around observed anchor $x_i$ at iteration $s$, as previously listed in the notation appendix. We have moved this definition closer to the equation and specified the numerical-coordinate normalization $\phi_j$ used in the region construction. **See revised Section 2.4 and the notation appendix.**
+**W6.** We compare GPT-5.6 alone, seven separately sampled GPT-5.6 proposals with aggregation, seven heterogeneous proposals with the same aggregation, and uniform selection from the identical heterogeneous pool. DoE evidence and objective evaluation budgets are matched; inference costs are reported separately. Shared-pool comparisons isolate aggregation; homogeneous-versus-heterogeneous comparisons evaluate ensemble designs, not diversity alone. See Section 4.3.
 
-**W5.** We appreciate this important question. Our scheduling rationale is motivated by prior studies, including LLAMBO (Liu et al., 2024), LLINBO (Chang et al., 2025), and AuxBO (Gupta et al., 2026), which highlight the usefulness of LLM guidance when observations are limited. In particular, we draw inspiration from the decaying LLM-influence strategies in LLINBO and AuxBO, which gradually shift optimization toward data-driven BO as more observations become available. **Our distinctive contribution is to ground LLM recommendations in statistical evidence obtained through DoE**, enabling evidence-informed identification of promising subregions rather than relying primarily on pretrained LLM knowledge.
+Table 1 concerns initialization: “Avg. Dist.” measures normalized input-space proximity to a global optimizer; “Regret” measures an objective-value gap, not distance or final regret at budget $T$. We distinguish these from end-to-end simple regret in Section 4.1.
 
-Regarding parameter selection, $\rho_0=0.10$ maintains a fixed probability of global random exploration, while $\lambda_0=0.80$ controls the initial balance between LLM-guided and GP-guided search. Both are empirically chosen. In contrast, the choice of $\gamma=4$ (or larger) is motivated by our theoretical analysis, with its justification and supporting verification provided in the appendix.
+**W7.** For Rastrigin, repeated proposals near $(0,0)$ could explain LLAMBO's early advantage; benchmark familiarity remains a possible explanation, not an established cause. On Bukin, we acknowledge LLAMBO's better performance within 50 evaluations. Its advantage cannot be attributed to luck merely because $N_{\mathrm{MC}}=20$. See the numerical-results discussion in Section 3.
 
-**See revised Section 2.4 and the Appendix.**
+The requested direct-LLM optimizer chooses each next point from the available context and observations without our GP/aggregation stage. Our expanded FCNet ablations examine component contributions but do not, by themselves, replace that direct comparison. See Section 3.
 
-**W6.** We thank the reviewer for this important question. We primarily use GPT-4o as the original baseline to maintain comparability with earlier LLM-assisted BO studies, including LLAMBO (Liu et al., 2024) and LLINBO (Chang et al., 2025), which employed earlier GPT-family models.
+**W8.** Our experiments are not exclusively continuous. FCNet Naval contains categorical choices, integer-valued parameters, and numerical parameters on finite grids; x264 uses constrained discrete configurations. These support applicability beyond continuous functions, without establishing effectiveness on every mixed-domain problem. See the FCNet and x264 experiments.
 
-Importantly, a stronger LLM does not necessarily guarantee better optimization performance, as model reliability may vary across objective functions. Our approach therefore aggregates multiple LLM recommendations to reduce dependence on any single model.
+**W9.** DoE initially spends evaluations on landscape characterization rather than immediate exploitation. The resulting evidence supports region selection, consistent with later catch-up. Added landscape and region visualizations illustrate this mechanism without establishing it from regret curves alone. See the revised Appendix.
 
-We agree that comparisons with stronger models are important. We have added **GPT-5.6** as a strong individual baseline and further compare seven independently sampled GPT-5.6 proposals with our original seven heterogeneous LLMs, using the same aggregation procedure. We also include random selection from the same proposal pool to isolate the effect of aggregation. These experiments use matched objective evaluation budgets, with inference costs reported separately.
+**W10.** The LLM warm-start GP baseline evaluates LLM-proposed initial points, then runs standard GP-based BO. We have clarified this definition.
 
-**See revised Section 4.3.**
+**W11.** We include identical DoE initialization followed by pattern search without LLM guidance, with the same total evaluation budget. This is a conventional direct-search comparator, distinct from our router's named Direct-Search path. The broader component study compares DoE and LLM guidance separately and jointly. See Section 4.4.
 
-Regarding the distance metric, average normalized distance measures the proximity of initial proposals to the known global optimum, while simple regret evaluates optimization performance. **See revised Section 4.1.**
-
-**W7.** We thank the reviewer for these observations. Regarding Rastrigin in Figure 3(a), LLAMBO's strong early performance may be explained by the function's well-known structure, particularly its global optimum at $(0,0)$. An LLM familiar with this benchmark may repeatedly propose points near the origin without learning the landscape from observations. Similar behavior is illustrated in **Figure 2(f), page 6, of LLINBO (Chang et al., 2025)**.
-
-Regarding Bukin in Figure 3(e), we agree that LLAMBO's performance is somewhat surprising. This may reflect the limited evaluation budget of 50 and the function's narrow, nonsmooth valley, which makes its landscape difficult to characterize. Moreover, with only $N_{\mathrm{MC}}=20$ runs, favorable stochastic outcomes may contribute to the observed performance. We have clarified these possible explanations in **Section 3**.
-
-Regarding the suggested direct-LLM comparison, we appreciate this recommendation. Our existing FCNet ablation in Section 3, Figure (b), already examines the separate contributions of DoE evidence and LLM guidance. We have further expanded this analysis with additional results in Figures (c) and (d), providing stronger evidence that the performance gains are largely attributable to DoE-grounded reasoning rather than LLM guidance alone.
-
-**See revised Section 3 and Figures (b)–(d).**
-
-**W8.** We respectfully clarify that our experiments are not limited to continuous domains. FCNet Naval includes nine categorical, integer-valued, and numerical hyperparameters, and our x264 application optimizes over constrained discrete software configurations. We agree that the evidence can be broadened further, and have added another heterogeneous-variable benchmark to examine the generality of the approach. **See revised Section 4.6.**
-
-**W9.** The initially slower improvement reflects the evaluations allocated to DoE: these observations characterize the objective landscape rather than immediately exploiting a small set of promising candidates. This evidence helps identify promising subregions for subsequent optimization, explaining the later catch-up in the regret curves. We have added a visualization of the learned landscape and selected regions to illustrate this mechanism. **See the revised Appendix.**
-
-**W10.** We apologize for the unclear terminology. The *LLM warm-start GP* baseline uses LLM-proposed points for its initial objective evaluations, then proceeds with standard GP-based BO. We have made this definition explicit in the revised manuscript.
-
-**W11.** We thank the reviewer for this useful baseline. We compare the same DoE initialization followed by conventional pattern search, without LLM proposals, under an identical total evaluation budget. We also organize the broader component analysis around four settings—neither DoE nor LLM guidance, DoE only, LLM guidance only, and both—to distinguish their individual and joint contributions. **See revised Section 4.4.**
-
-**W12.** We agree that the main text should emphasize the reasoning behind the method rather than implementation detail. We have simplified the figure and pseudocode, defined notation consistently, expanded the intuitive explanations, and moved secondary algorithms and technical details to the appendix. **See revised Sections 2–3 and the Appendix.**
-
-We sincerely thank the reviewer again for the detailed feedback. We believe these revisions better communicate the specific roles of objective-grounded evidence, collective proposal aggregation, and sequential optimization, while making their individual contributions easier to evaluate.
+**W12.** We have simplified the main figure and pseudocode, standardized notation, expanded the methodological explanations, and moved secondary details to the appendix. Thank you again for these helpful suggestions.
 
 ---
 
