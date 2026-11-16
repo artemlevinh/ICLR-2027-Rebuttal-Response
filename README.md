@@ -20,13 +20,15 @@ Regarding parameter selection, $\rho_0=0.10$ maintains a fixed probability of gl
 
 **See revised Section 2.4 and the Appendix.**
 
-**W6.** We thank the reviewer for this important question. We primarily use GPT-4o Mini as a baseline to maintain comparability with previous LLM-assisted BO studies, such as LLAMBO (Liu et al., 2024) and LLINBO (Chang et al., 2025), which used earlier GPT-family models. Our objective is not to demonstrate superiority over a relatively weaker LLM, but to show that evidence-grounded collective reasoning can provide benefits even when compared with earlier-generation models.
+**W6.** We thank the reviewer for this important question. We primarily use GPT-4o as the original baseline to maintain comparability with earlier LLM-assisted BO studies, including LLAMBO (Liu et al., 2024) and LLINBO (Chang et al., 2025), which employed earlier GPT-family models.
 
-Importantly, a stronger LLM does not necessarily guarantee better optimization performance. Model reliability may vary across objective functions, and the best-performing model cannot be reliably identified beforehand. Our approach therefore aggregates recommendations from multiple LLMs to reduce dependence on any single model. We have further examined this question through additional experiments reported in the revised Appendix.
+Importantly, a stronger LLM does not necessarily guarantee better optimization performance, as model reliability may vary across objective functions. Our approach therefore aggregates multiple LLM recommendations to reduce dependence on any single model.
 
-Nevertheless, we agree that stronger-model comparisons are important. We have added experiments comparing individual strong LLMs, seven proposals from one strong model, seven heterogeneous LLMs, and random or strong-LLM selection from the same proposal pool, with matched objective evaluation budgets and inference costs reported separately. **See revised Section 4.3.**
+We agree that comparisons with stronger models are important. We have added **GPT-5.6** as a strong individual baseline and further compare seven independently sampled GPT-5.6 proposals with our original seven heterogeneous LLMs, using the same aggregation procedure. We also include random selection from the same proposal pool to isolate the effect of aggregation. These experiments use matched objective evaluation budgets, with inference costs reported separately.
 
-Regarding the distance metric, average normalized distance measures how close the proposed initial points are to the known global optimum, averaged over experimental runs. It evaluates initialization quality rather than final optimization performance, which we separately assess using simple regret. **See revised Section 4.1.**
+**See revised Section 4.3.**
+
+Regarding the distance metric, average normalized distance measures the proximity of initial proposals to the known global optimum, while simple regret evaluates optimization performance. **See revised Section 4.1.**
 
 **W7.** We thank the reviewer for these observations. Regarding Rastrigin in Figure 3(a), LLAMBO's strong early performance may be explained by the function's well-known structure, particularly its global optimum at $(0,0)$. An LLM familiar with this benchmark may repeatedly propose points near the origin without learning the landscape from observations. Similar behavior is illustrated in **Figure 2(f), page 6, of LLINBO (Chang et al., 2025)**.
 
@@ -54,7 +56,13 @@ We sincerely thank the reviewer again for the detailed feedback. We believe thes
 
 We sincerely thank the reviewer for the constructive assessment and for recognizing the motivation and empirical promise of the framework. We appreciate the request for stronger component identification and have clarified the corresponding experimental comparisons.
 
-**W1.** We appreciate the concern that the original comparison with one GPT-4o Mini may reflect differences in model capability or proposal count as well as aggregation. Our motivation is to obtain reliable guidance when it is not known beforehand which model will be most effective for a new objective. Aggregation can reduce dependence on a single potentially misleading proposal, but we agree that its value should be tested against strong alternatives. We therefore compare individual strong models, seven proposals sampled from the same strong model, seven heterogeneous proposals, and random selection from an identical proposal pool. We additionally test whether a strong LLM selecting one proposal from that pool is preferable to medoid or projected-mean aggregation. These comparisons maintain the same DoE evidence and objective evaluation budgets, with inference costs reported separately. We evaluate both average optimization quality and robustness across tasks. **See revised Section 4.3.**
+**W1.** We thank the reviewer for this important observation. We appreciate that the original comparison with GPT-4o may not fully distinguish model capability, proposal count, and aggregation.
+
+Our motivation is that the most reliable LLM for a given optimization problem cannot always be identified beforehand. To examine this motivation more rigorously, we introduce **GPT-5.6 as a strong single-model baseline** and compare it against seven independently sampled GPT-5.6 proposals with aggregation and our original seven heterogeneous LLMs with the same aggregation procedure.
+
+We additionally compare aggregation with random selection from the same seven-proposal pool. These experiments help distinguish the contributions of model capability, repeated sampling, model diversity, and aggregation. We maintain consistent DoE evidence and objective evaluation budgets, while reporting inference costs separately.
+
+**See revised Section 4.3.**
 
 **W2.** We agree that DoE statistics such as estimated effects, interactions, and ranked candidates can themselves guide region selection. Our reason for using LLMs is to combine these measured patterns with factor descriptions and feasibility constraints when recommending promising subregions; this does not imply that an LLM is always necessary. To assess its incremental contribution, we compare an LLM-free statistical region-selection rule with LLM-guided selection using the same DoE observations and downstream GP-BO procedure. We also examine DoE-only and LLM-only variants as part of the component study. **See revised Section 4.4.**
 
@@ -71,7 +79,13 @@ To examine the contribution of this mechanism, our FCNet ablation in Section 3, 
 
 We sincerely thank the reviewer for the careful reading and thoughtful comments on the experiments, presentation, and theoretical results. We appreciate the recognition of the motivation for evidence-grounded collective reasoning and address the concerns below.
 
-**W1.** We appreciate the concern that comparing seven heterogeneous LLMs with one GPT-4o Mini does not by itself determine which aspect of the ensemble generates the gains. Our motivation is that individual LLM reliability may vary across tasks, so relying on one model selected beforehand can be fragile. Aggregation is intended to reduce this dependence, not to assume that averaging must outperform every strong alternative. We have expanded the comparisons to strong individual models, seven independent proposals from one strong model, heterogeneous seven-model aggregation, and random selection from the same proposal pool. We also compare aggregation with a strong LLM selecting among those same proposals. Matching DoE evidence and objective evaluation budgets, while reporting inference cost separately, allows us to assess the roles of proposal count, model capability, and aggregation. **See revised Section 4.3.**
+**W1.** We appreciate the reviewer's concern regarding the fairness of our original multi-LLM comparison. Our objective is to provide reliable optimization guidance without assuming that the best-performing LLM for a new task is known beforehand.
+
+To address this concern, we have added **GPT-5.6 as a stronger individual baseline**. We further compare seven independent proposals from GPT-5.6 with seven proposals from our heterogeneous LLM ensemble, applying the same aggregation method. A random-selection baseline using the identical heterogeneous proposal pool helps isolate the benefit of aggregation itself.
+
+All comparisons use matched DoE evidence and objective evaluation budgets, with inference costs reported separately. This allows us to more clearly evaluate the respective effects of model strength, proposal diversity, and collective aggregation.
+
+**See revised Section 4.3.**
 
 **W2.** We thank the reviewer for raising this concern. We agree that a black-box optimizer should not exploit knowledge of the global optimum during initialization. We would like to clarify that our statement about using 8 CCD points and 5 maximin points for Rastrigin was intended to explain how we **avoided directly sampling the known optimum at $(0,0)$**, rather than using its location to guide optimization. A standard CCD may include the center point, which coincides with Rastrigin's global optimum. Evaluating this point during initialization would make the problem artificially easy and obscure the contribution of DoE-based statistical evidence and subsequent optimization.
 
