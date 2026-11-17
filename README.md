@@ -6,7 +6,7 @@ We thank the reviewer for the detailed assessment and constructive suggestions. 
 
 **W2.** We have clarified notation and shortened the pseudocode. Theorem 1 states that when a majority of proposals are close to a reference region, their medoid remains within a bounded distance. Independence is required for the probability statement, not the deterministic majority bound. We now explain these assumptions and distinguish proposal robustness from BO regret guarantees. See Sections 2–3 and the theoretical appendix.
 
-**W3.** We selected $\rho_{\mathrm{DoE}}=0.3$ through experimental comparisons under a fixed total evaluation budget. This balances initial evidence against sequential evaluations. The revised sensitivity analysis explains this choice. Our current allocation is predetermined; adapting it using BO feedback remains a useful extension. See Section 4.5.
+**W3.** We selected $\rho_{\mathrm{DoE}}=0.3$ through experimental comparisons under a fixed total evaluation budget. This balances initial evidence against sequential evaluations. The revised sensitivity analysis explains this choice. Our current allocation is predetermined; adapting it using BO feedback remains a useful extension. See Section 4. 
 
 **W4.** $L_{i,s}$ is the scalar trust-region size around anchor $x_i$ at iteration $s$. We have moved its definition from the notation appendix to the corresponding equation and clarified the numerical-coordinate transformation $\phi_j$. See revised Section 2.4 and the notation appendix.
 
@@ -14,7 +14,7 @@ We thank the reviewer for the detailed assessment and constructive suggestions. 
 
 **W6.** We compare GPT-5.6 alone, seven separately sampled GPT-5.6 proposals with aggregation, seven heterogeneous proposals with the same aggregation, and uniform selection from the identical heterogeneous pool. DoE evidence and objective evaluation budgets are matched; inference costs are reported separately. Shared-pool comparisons isolate aggregation; homogeneous-versus-heterogeneous comparisons evaluate ensemble designs, not diversity alone. See Section 4.
 
-Table 1 concerns initialization: “Avg. Dist.” measures normalized input-space proximity to a global optimizer; “Regret” measures an objective-value gap, not distance or final regret at budget $T$. We distinguish these from end-to-end simple regret in Section 4.1.
+Table 1 concerns initialization: “Avg. Dist.” measures normalized input-space proximity to a global optimizer; “Regret” measures an objective-value gap, not distance or final regret at budget $T$. We distinguish these from end-to-end simple regret in Section 4. 
 
 **W7.** For Rastrigin, repeated proposals near $(0,0)$ could explain LLAMBO's early advantage; benchmark familiarity remains a possible explanation, not an established cause. On Bukin, we acknowledge LLAMBO's better performance within 50 evaluations. Its advantage cannot be attributed to luck merely because $N_{\mathrm{MC}}=20$. See the numerical-results discussion in Section 3.
 
